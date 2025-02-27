@@ -1,43 +1,88 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTodo = exports.updateTodo = exports.getTodos = exports.createTodo = void 0;
-const todo_1 = require("../modals/todo");
+exports.createTodo = void 0;
+const todo_1 = __importDefault(require("../modals/todo"));
 // export const createTodo = (
 //     req: Request,
 //     res: Response,
 //     next: NextFunction
 // ) => { };
-const TODOS = [];
-const createTodo = (req, res, next) => {
-    const text = req.body.text;
-    const newTodo = new todo_1.Todo((Math.round(Math.random() * 1000)).toString(), text);
-    TODOS.push(newTodo);
-    res.status(201).json({ message: "Created to todo", createTodo: newTodo });
+// const TODOS: Todo[] = [];
+/*
+export const createTodo: RequestHandler = async (req, res, next) => {
+
+    try {
+        const data: TodoModel = req.body;
+        console.log('Data', data);
+        let todos = await Todo.create(data);
+        return res
+            .status(200)
+            .json({ message: 'Todo created sucessfully', data: todos });
+    } catch (error: any) {
+        return res.status(500).json({ message: error.message });
+    }
+}*/
+const createTodo = async (req, res, next) => {
+    try {
+        const data = req.body;
+        let todos = await todo_1.default.create(data);
+        res
+            .status(200)
+            .json({ message: 'Todo created sucessfully', data: todos });
+    }
+    catch (error) {
+    }
 };
 exports.createTodo = createTodo;
-const getTodos = (req, res, next) => {
-    res.json({ todos: TODOS });
+/*
+    const data: TodoModel = req.body;
+    const text = (req.body as { text: string }).text;
+
+    const newTodo = new Todo((Math.round(Math.random() * 1000)).toString(), text);
+    let todos = Todo.create(data);
+
+    res.status(201).json({ message: "Created to todo", createTodo: newTodo })
+};*/
+/*
+export const createTodo: RequestHandler = (req, res, next) => {
+
+    const text = (req.body as { text: string }).text;
+
+    const newTodo = new Todo((Math.round(Math.random() * 1000)).toString(), text);
+    TODOS.push(newTodo);
+
+    res.status(201).json({ message: "Created to todo", createTodo: newTodo })
 };
-exports.getTodos = getTodos;
-const updateTodo = (req, res, next) => {
+
+export const getTodos: RequestHandler = (req, res, next) => {
+    res.json({ todos: TODOS });
+}
+
+export const updateTodo: RequestHandler = (req, res, next) => {
     const todoId = req.params.id;
-    const updatedText = req.body.text;
+
+    const updatedText = (req.body as { text: string }).text;
     const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+
     if (todoIndex < 0) {
         throw new Error("Could not find index");
     }
-    TODOS[todoIndex] = new todo_1.Todo(TODOS[todoIndex].id, updatedText);
+    TODOS[todoIndex] = new Todo(TODOS[todoIndex].id, updatedText);
     res.json({ message: "Updated todo!", updateTodo: TODOS[todoIndex] });
-};
-exports.updateTodo = updateTodo;
-const deleteTodo = (req, res, next) => {
+}
+
+export const deleteTodo: RequestHandler = (req, res, next) => {
     const todoId = req.params.id;
-    const updatedText = req.body.text;
+
+    const updatedText = (req.body as { text: string }).text;
     const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+
     if (todoIndex < 0) {
         throw new Error("Could not find index");
     }
     TODOS.splice(todoIndex, 1);
     res.json({ message: "Deleted todo!", deleted_ID: todoId });
-};
-exports.deleteTodo = deleteTodo;
+}*/
